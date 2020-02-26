@@ -14,8 +14,17 @@ exports.createPages = ({ graphql, actions }) => {
             }
           }
         }
+        allDatoCmsService {
+          edges {
+            node {
+              slug
+            }
+          }
+        }
       }
     `).then(result => {
+
+      // Create all "work" pages
       result.data.allDatoCmsWork.edges.map(({ node: work }) => {
         createPage({
           path: `works/${work.slug}`,
@@ -24,8 +33,20 @@ exports.createPages = ({ graphql, actions }) => {
             slug: work.slug,
           },
         })
-      })
-      resolve()
+      });
+
+      // Create all "service" pages
+      result.data.allDatoCmsService.edges.map(({ node: service }) => {
+        createPage({
+          path: `services/${service.slug}`, // Parent slug would need to be language-variant
+          component: path.resolve(`./src/templates/service.js`),
+          context: {
+            slug: service.slug,
+          },
+        })
+      });
+
+      resolve();
     })
   })
 }

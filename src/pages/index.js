@@ -6,6 +6,12 @@ import Layout from "../components/layout"
 
 const IndexPage = ({ data }) => (
   <Layout>
+    <h2>Offered services:</h2>
+    <ul>
+      {data.allDatoCmsService.edges.map(({ node: service }) => (
+        <li><Link to={`/services/${service.slug}`}>{service.name}</Link></li>
+      ))}
+    </ul>
     <Masonry className="showcase">
       {data.allDatoCmsWork.edges.map(({ node: work }) => (
         <div key={work.id} className="showcase__item">
@@ -44,6 +50,15 @@ export const query = graphql`
               ...GatsbyDatoCmsSizes
             }
           }
+        }
+      }
+    }
+    allDatoCmsService {
+      edges {
+        node {
+          id
+          name
+          slug
         }
       }
     }
